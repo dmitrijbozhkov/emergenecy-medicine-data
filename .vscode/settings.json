@@ -3,5 +3,9 @@
     "python.unitTest.promptToConfigure": false,
     "python.unitTest.pyTestEnabled": false,
     "python.unitTest.nosetestsEnabled": false,
-    "python.pythonPath": "${workspaceFolder}\\crawlerenv\\Scripts\\python.exe"
+    "python.pythonPath": "${workspaceFolder}\\crawlerenv\\Scripts\\python.exe",
+    "python.linting.pylintPath": "${workspaceFolder}\\crawlerenv\\Scripts\\pylint.exe",
+    "python.linting.pylintArgs": [
+        "--disable=E0401"
+    ],
 }

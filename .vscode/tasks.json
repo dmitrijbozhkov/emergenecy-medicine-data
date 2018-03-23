@@ -11,7 +11,7 @@
         {
             "label": "Test interactive bot",
             "type": "shell",
-            "command": "crawlerenv\\Scripts\\python -m unittest discover -v -s ./interactive-bots/test -p test_*.py"
+            "command": "crawlerenv\\Scripts\\python -m unittest discover -v -s ./interactive-bots -p test_*.py"
         }
     ]
 }
