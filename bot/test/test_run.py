@@ -2,14 +2,12 @@
 import unittest
 
 class TestDesign(unittest.TestCase):
-    def test_pass(self):
-        """ Always passes """
-        self.assertTrue(True)
+    def test_command_arguments_zip_paths_data_driver(self):
+        """  """
         return
     
-    def test_fail(self):
+    def test_command_arguments_parse_log(self):
         """ Always fails """
-        self.assertTrue(False)
         return
 
 if __name__ == '__main__':
