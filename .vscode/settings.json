@@ -6,6 +6,7 @@
     "python.pythonPath": "${workspaceFolder}\\crawlerenv\\Scripts\\python.exe",
     "python.linting.pylintPath": "${workspaceFolder}\\crawlerenv\\Scripts\\pylint.exe",
     "python.linting.pylintArgs": [
-        "--disable=E0401"
+        "--disable=E0401",
+        "--disable=E0611"
     ],
 }

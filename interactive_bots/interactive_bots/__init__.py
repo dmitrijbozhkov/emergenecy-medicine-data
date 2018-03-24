@@ -1,7 +1,8 @@
 """List of bots that deal with js applications"""
-from lib.utils import parse_params
+from argparse import ArgumentParser
+from commons.utils import parse_args
 from diagnosis_online_bot.bot import run
 
 if __name__ == "__main__":
-    args = parse_params()
+    args = parse_args(ArgumentParser())
     run(args)
