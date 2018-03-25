@@ -1,7 +1,7 @@
 """ Functions for bot """
-# from ..lib.form_crawler import FormCrawler
+from interactive_bots.commons.utils import init_chrome_driver
 
 def run(args):
     """ Sets up and runs bot """
-    print(args)
+    driver = init_chrome_driver(args.headless)
     return

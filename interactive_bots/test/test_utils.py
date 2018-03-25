@@ -1,6 +1,6 @@
-""" Tests that always pass """
+""" Tests for crawler utilities """
 from unittest import TestCase, main
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 from interactive_bots.commons.utils import parse_args, init_chrome_driver
 
 class ParseArgsTestCase(TestCase):
@@ -48,8 +48,29 @@ class ParseArgsTestCase(TestCase):
 
 class InitChromeBrowserTestCase(TestCase):
     """ Test case for init_chrome_driver function """
-    def test_(self, parameter_list):
-        pass
+    @patch("interactive_bots.commons.utils.Chrome")
+    def test_init_chrome_driver_should_create_chrome_driver_if_is_headless_not_true(self, mock_driver):
+        """ Chrome driver should be created if is_headless is False """
+        init_chrome_driver(False)
+        self.assertTrue(mock_driver.called)
+
+    @patch("interactive_bots.commons.utils.Chrome")
+    @patch("interactive_bots.commons.utils.Options")
+    def test_init_chrome_driver_should_be_inicialized_with_options(self, parameter_list, mock_driver):
+        """ If True passed init_chrome_driver should add chrome_options """
+        options_mock = Mock()
+        parameter_list.return_value = options_mock
+        init_chrome_driver(True)
+        mock_driver.assert_called_once_with(chrome_options=options_mock)
+
+    @patch("interactive_bots.commons.utils.Chrome")
+    @patch("interactive_bots.commons.utils.Options")
+    def test_init_chrome_driver_should_be_inicialized_with_headless_option(self, parameter_list, mock_driver):
+        """ If True passed init_chrome_driver should add --headless option """
+        options_mock = Mock()
+        parameter_list.return_value = options_mock
+        init_chrome_driver(True)
+        options_mock.add_argument.assert_called_once_with("--headless")
 
 if __name__ == "__main__":
     main()
