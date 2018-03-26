@@ -1,1 +1,1 @@
-""" Tests for  """
+""" Tests for interactive bots """

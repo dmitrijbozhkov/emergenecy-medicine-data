@@ -1,7 +1,7 @@
 """ Tests for crawler utilities """
 from unittest import TestCase, main
 from unittest.mock import Mock, patch
-from interactive_bots.commons.utils import parse_args, init_chrome_driver
+from interactive_bots.commons.utils import parse_args, init_chrome_driver, open_output_file
 
 class ParseArgsTestCase(TestCase):
     """ Test case for parse_args function """
@@ -71,6 +71,37 @@ class InitChromeBrowserTestCase(TestCase):
         parameter_list.return_value = options_mock
         init_chrome_driver(True)
         options_mock.add_argument.assert_called_once_with("--headless")
+
+class OpenOutputFileTestCase(TestCase):
+    """ Test case for open_output_file function """
+    @patch("interactive_bots.commons.utils.DictWriter")
+    @patch("interactive_bots.commons.utils.open")
+    def test_should_open_file(self, open_mock, writer_mock):
+        """ Should call open with provided path and w+ mode """
+        path = "./stuff.csv"
+        open_output_file(path, [1, 2, 3])
+        open_mock.assert_called_once_with(path, "w+")
+
+    @patch("interactive_bots.commons.utils.DictWriter")
+    @patch("interactive_bots.commons.utils.open")
+    def test_should_create_writer(self, open_mock, writer_mock):
+        """ Should create DictWriter class with provided file and list of headers """
+        headers = [1, 2, 3]
+        file = Mock()
+        open_mock.return_value = file
+        open_output_file("./stuff.csv", headers)
+        writer_mock.assert_called_once_with(file, headers)
+
+    @patch("interactive_bots.commons.utils.DictWriter")
+    @patch("interactive_bots.commons.utils.open")
+    def test_should_return_dictionary_with_file_and_writer(self, open_mock, writer_mock):
+        """ Should return dictionary with items: file and writer """
+        file_ret = Mock()
+        write_ret = Mock()
+        open_mock.return_value = file_ret
+        writer_mock.return_value = write_ret
+        file = open_output_file("./stuff.csv", [1, 2, 3])
+        self.assertTrue(file["file"] is file_ret, file["writer"] is write_ret)
 
 if __name__ == "__main__":
     main()

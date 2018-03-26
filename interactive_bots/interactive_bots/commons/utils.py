@@ -1,6 +1,7 @@
 """ Common utilities """
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
+from csv import DictWriter
 
 def parse_args(parser):
     """ Takes ArgumentParser and parses arguments """
@@ -34,3 +35,11 @@ def init_chrome_driver(is_headless):
         return Chrome(chrome_options=options)
     else:
         return Chrome()
+
+def open_output_file(path, columns):
+    """ Opens or creates output file for writing """
+    file = open(path, "w+")
+    return {
+        "file": file,
+        "writer": DictWriter(file, columns)
+    }

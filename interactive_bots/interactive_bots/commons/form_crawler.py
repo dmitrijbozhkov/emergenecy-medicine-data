@@ -4,36 +4,32 @@ from functools import partial
 class FormActionOptions():
     """ Action that needs to be done on form """
     def __init__(self, driver):
-        self.counter = 0
+        self.acc = 0
         self.driver = driver
         self.navigate = None
         self.data = None
         self.action = None
 
-    def set_actions(self, navigate, data, action=None):
-        """ Sets form item action action """
+    def set_actions(self, navigate, action, data):
+        """ Sets form item navigate, action and data """
         self.navigate = partial(navigate, self.driver)
         self.data = partial(data, self.driver)
-        if action is None:
-            self.action = lambda l, i: l[i]
-        else:
-            self.action = partial(action, self.driver)
+        self.action = partial(action, self.driver)
 
-    def reset_counter(self):
-        """ Resets counter of action options """
-        self.counter = 0
+    def reset_accumulator(self):
+        """ Resets accumulator of action """
+        self.acc = 0
 
     def __iter__(self):
         return self
 
     def __next__(self):
         items = self.navigate()
-        if self.counter >= len(items):
+        self.acc = self.action(items, self.acc)
+        if not self.acc:
             raise StopIteration()
         else:
-            item = self.action(items, self.counter)
-            self.counter += 1
-            return self.data(item)
+            return self.data(self.acc)
 
 class FormCrawler():
     """ Goes through FormActionOption's and writes results to a file """
@@ -59,11 +55,14 @@ class FormCrawler():
         writer.writeheader()
         while pointer >= 0:
             try:
-                row = {**row, **next(self.actions[pointer])}
-            except StopIteration:
-                pointer -= 1
-            else:
+                record = next(self.actions[pointer])
                 if pointer == last_act:
-                    writer.writerow(row)
+                    for rows in record:
+                        row.update(rows)
+                        writer.writerow(row)
                 else:
+                    row.update(record)
                     pointer += 1
+            except StopIteration:
+                self.actions[pointer].reset_accumulator()
+                pointer -= 1
