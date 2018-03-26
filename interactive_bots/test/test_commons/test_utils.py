@@ -1,7 +1,7 @@
 """ Tests for crawler utilities """
 from unittest import TestCase, main
 from unittest.mock import Mock, patch
-from interactive_bots.commons.utils import parse_args, init_chrome_driver, open_output_file
+from interactive_bots.commons.utils import parse_args, init_chrome_driver, open_output_file, ExhaustOptions
 
 class ParseArgsTestCase(TestCase):
     """ Test case for parse_args function """
@@ -102,6 +102,11 @@ class OpenOutputFileTestCase(TestCase):
         writer_mock.return_value = write_ret
         file = open_output_file("./stuff.csv", [1, 2, 3])
         self.assertTrue(file["file"] is file_ret, file["writer"] is write_ret)
+
+class ExhaustOptionsTestCase():
+    """ Test case for exhaust options """
+    def test_(self):
+        """  """
 
 if __name__ == "__main__":
     main()

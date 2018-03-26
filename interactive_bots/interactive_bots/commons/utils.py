@@ -1,7 +1,7 @@
 """ Common utilities """
+from csv import DictWriter
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
-from csv import DictWriter
 
 def parse_args(parser):
     """ Takes ArgumentParser and parses arguments """
@@ -43,3 +43,28 @@ def open_output_file(path, columns):
         "file": file,
         "writer": DictWriter(file, columns)
     }
+
+class ExhaustOptions():
+    """ Class that takes list length and goes through all possible variants of its items """
+    def __init__(self, list_len):
+        self.list_len = list_len
+        self.positions = []
+        self.pointer = 0
+    
+    def _add_position(self):
+        """ Adds item to positions and resets pointer """
+        for i, p in enumerate(self.positions):
+            self.positions[i] = i
+        self.positions.append(len(self.positions))
+        self.pointer = 0
+
+    def _positions_items(self, item_list):
+        """ Returns list of items bypositions """
+        
+
+    def next(self, item_list):
+        """ Returns variant of items """
+        if self.pointer >= self.list_len:
+            self._add_position()
+        else:
+
