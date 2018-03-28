@@ -59,7 +59,6 @@ class FormCrawler():
                 if pointer == last_act:
                     for rows in record:
                         row.update(rows)
-                        print(row)
                         writer.writerow(row)
                 else:
                     row.update(record)

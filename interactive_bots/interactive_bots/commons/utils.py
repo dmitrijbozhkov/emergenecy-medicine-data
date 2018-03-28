@@ -2,6 +2,7 @@
 from csv import DictWriter
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
+from itertools import combinations
 
 def parse_args(parser):
     """ Takes ArgumentParser and parses arguments """
@@ -48,23 +49,22 @@ class ExhaustOptions():
     """ Class that takes list length and goes through all possible variants of its items """
     def __init__(self, list_len):
         self.list_len = list_len
-        self.positions = []
-        self.pointer = 0
-    
-    def _add_position(self):
-        """ Adds item to positions and resets pointer """
-        for i, p in enumerate(self.positions):
-            self.positions[i] = i
-        self.positions.append(len(self.positions))
-        self.pointer = 0
+        self.positions = [x for x in range(0, list_len)]
+        self.comb = []
+        self.items = 1
 
-    def _positions_items(self, item_list):
-        """ Returns list of items bypositions """
-        
+    def _next_item(self, item_list):
+        """ Returns next item combination from list """
+        combine = self.comb.pop()
+        return [item_list[i] for i in combine]
 
     def next(self, item_list):
         """ Returns variant of items """
-        if self.pointer >= self.list_len:
-            self._add_position()
+        if self.comb:
+            return self._next_item(item_list)
+        elif self.items > self.list_len:
+            raise StopIteration
         else:
-
+            self.comb = list(combinations(self.positions, self.items))
+            self.items += 1
+            return self._next_item(item_list)

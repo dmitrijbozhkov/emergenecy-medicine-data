@@ -1,6 +1,7 @@
 """ Tests for crawler utilities """
 from unittest import TestCase, main
 from unittest.mock import Mock, patch
+from functools import partial
 from interactive_bots.commons.utils import parse_args, init_chrome_driver, open_output_file, ExhaustOptions
 
 class ParseArgsTestCase(TestCase):
@@ -103,10 +104,28 @@ class OpenOutputFileTestCase(TestCase):
         file = open_output_file("./stuff.csv", [1, 2, 3])
         self.assertTrue(file["file"] is file_ret, file["writer"] is write_ret)
 
-class ExhaustOptionsTestCase():
+class ExhaustOptionsTestCase(TestCase):
     """ Test case for exhaust options """
-    def test_(self):
-        """  """
+    def setUp(self):
+        self.ls = ["pepe", "meme", "lul", "lidl"]
+        self.options = ExhaustOptions(len(self.ls))
+
+    def test_next_should_take_list_of_items_and_return_one_combination(self):
+        """ next should take list of items and with each call return combination of these items """
+        option = self.options.next(self.ls)
+        self.assertTrue(self.ls[3] in option)
+
+    def test_if_combinations_not_empty_pop_one(self):
+        """ next should return last combination from comb list """
+        self.options.comb = [(1, 2), (0, 3)]
+        option = self.options.next(self.ls)
+        self.assertTrue(self.ls[0] in option)
+        self.assertTrue(self.ls[3] in option)
+
+    def test_next_if_items_more_than_length_raise_exception(self):
+        """ next should raise StopIteration exception if items is more than list length and comb has no elements """
+        self.options.items = 8
+        self.assertRaises(StopIteration, partial(self.options.next, self.ls))
 
 if __name__ == "__main__":
     main()
