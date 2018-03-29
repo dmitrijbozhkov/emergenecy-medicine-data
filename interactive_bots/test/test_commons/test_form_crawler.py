@@ -64,8 +64,7 @@ class FormActionOptionsTestCase(TestCase):
 class FormCrawlerTestCase(TestCase):
     """ Test case for FormCrawler """
     def setUp(self):
-        self.driver_mock = Mock()
-        self.form_crawler = FormCrawler(self.driver_mock)
+        self.form_crawler = FormCrawler()
 
     def test_add_action_should_add_action_to_list(self):
         """ add_action method should append action to actions list """

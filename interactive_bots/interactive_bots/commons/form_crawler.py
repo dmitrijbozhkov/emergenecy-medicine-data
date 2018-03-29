@@ -33,8 +33,7 @@ class FormActionOptions():
 
 class FormCrawler():
     """ Goes through FormActionOption's and writes results to a file """
-    def __init__(self, driver):
-        self.driver = driver
+    def __init__(self):
         self.actions = []
 
     def add_action(self, action):
