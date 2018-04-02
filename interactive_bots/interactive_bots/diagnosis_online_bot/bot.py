@@ -1,6 +1,7 @@
 """ Functions for bot """
 from interactive_bots.commons.utils import init_chrome_driver, ExhaustOptions
 from interactive_bots.commons.form_crawler import FormActionOptions, FormCrawler
+from selenium.common.exceptions import NoSuchElementException
 
 def run(args):
     """ Sets up and runs bot """
@@ -17,14 +18,14 @@ def act_symptom_groups(driver, groups, acc):
     """ Clicks on appropriate symptom group """
     if acc == 0:
         groups[0].click()
-        return (groups[0], 0)
+        return (groups[0], 1)
     else:
         groups[acc[1]].click()
         return (groups[acc[1]], acc[1] + 1)
 
 def get_data_symptom_groups(driver, group):
     """ Gets name of symptom name """
-    return group[0].text.strip()
+    return {"symptom_group": group[0].text.strip()}
 
 def navigate_symptoms(driver):
     """ Navigates through symptoms """

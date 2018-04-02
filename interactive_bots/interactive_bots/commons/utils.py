@@ -1,8 +1,8 @@
 """ Common utilities """
 from csv import DictWriter
+from itertools import combinations
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
-from itertools import combinations
 
 def parse_args(parser):
     """ Takes ArgumentParser and parses arguments """
