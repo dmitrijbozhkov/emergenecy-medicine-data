@@ -1,4 +1,5 @@
 """ Functions for bot """
+from functools import reduce
 from interactive_bots.commons.utils import init_chrome_driver, ExhaustOptions
 from interactive_bots.commons.form_crawler import FormActionOptions, FormCrawler
 from selenium.common.exceptions import NoSuchElementException
@@ -45,19 +46,42 @@ def next_symptom_combination(symptoms, acc, add_symptom):
     for option in options:
         option.click()
         add_symptom.click()
+    return options
 
 def act_symptom(driver, symptoms, acc):
     """ Selects or disselects symptoms """
     add_symptom = driver.find_element_by_css_selector("button[onclick='addfunc()']")
     remove_symptom = driver.find_element_by_css_selector("button[onclick='delfunc()']")
     clear_symptoms(driver, remove_symptom)
+    print(acc)
     try:
         if acc:
-            next_symptom_combination(symptoms, acc, add_symptom)
-            return acc
+            options = next_symptom_combination(symptoms, acc[1], add_symptom)
+            return (options, acc[1])
         else:
             acc = ExhaustOptions(len(symptoms))
-            next_symptom_combination(symptoms, acc, add_symptom)
-            return acc
+            options = next_symptom_combination(symptoms, acc, add_symptom)
+            return (options, acc)
     except StopIteration:
         return False
+
+def get_data_symptom(driver, options):
+    """ Gets names of symptoms """
+    symptoms = reduce(lambda acc, sym: acc + sym.text.strip() + ";", options[0], "")
+    return {"symptoms": symptoms}
+
+def navigate_diagnosis(driver):
+    """ Searches for submit button """
+    return driver.find_element_by_css_selector("input[type='submit']")
+
+def act_diagnosis(driver, submit, acc):
+    """ Pushes submit button """
+    if acc:
+        return False
+    else:
+        submit.click()
+        return True
+
+def get_data_diagnosis(driver, acc):
+    """ Get diagnoses from symptoms """
+    
