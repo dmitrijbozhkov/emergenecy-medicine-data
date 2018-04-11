@@ -11,7 +11,8 @@ from interactive_bots.diagnosis_online_bot.bot import (navigate_symptom_groups,
     act_symptom,
     get_data_symptom,
     navigate_diagnosis,
-    act_diagnosis)
+    act_diagnosis,
+    get_data_diagnosis)
 
 class SymptomGroupsTestCase(TestCase):
     """ Test case for navigate, action and data function for symptom groups """
@@ -287,6 +288,28 @@ class DiagnosisTestCase(TestCase):
         submit_mock = Mock()
         result = act_diagnosis(self.driver_mock, submit_mock, True)
         self.assertFalse(result)
+
+    @patch("interactive_bots.diagnosis_online_bot.bot.map")
+    def test_get_data_diagnosis_should_select_diagnosis_field(self, map_mock):
+        """ get_data_diagnosis should select element with id List11 """
+        get_data_diagnosis(self.driver_mock, None)
+        self.driver_mock.find_element_by_id.assert_called_once_with("List11")
+
+    def test_get_data_diagnosis_should_select_diagnosis_options(self):
+        """ get_data_diagnosis should select option elements inside node with id List11 """
+        diagnoses_mock = Mock()
+        diagnoses_mock.find_elements_by_css_selector.return_value = []
+        self.driver_mock.find_element_by_id.return_value = diagnoses_mock
+        get_data_diagnosis(self.driver_mock, None)
+        diagnoses_mock.find_elements_by_css_selector.assert_called_once_with("option")
+
+    @patch("interactive_bots.diagnosis_online_bot.bot.map")
+    def test_get_data_diagnosis_should_return_map_of_stripped_text(self, map_mock):
+        """ get_data_diagnosis should call map with lambda that takes text from each node and call strip on it """
+        mapped_mock = Mock()
+        map_mock.return_value = mapped_mock
+        contents = get_data_diagnosis(self.driver_mock, None)
+        self.assertEqual(contents, mapped_mock)
 
 if __name__ == "__main__":
     main()

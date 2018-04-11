@@ -14,28 +14,35 @@ def parse_args(parser):
         action="store",
         type=str)
     parser.add_argument(
-        "-head",
-        "--headless",
-        required=False,
-        help="Should browser be run headlessly",
-        action="count")
-    parser.add_argument(
         "-b",
         "--bot",
         required=True,
         help="Which bot should be used",
         action="store",
         type=str)
+    parser.add_argument(
+        "-head",
+        "--headless",
+        required=False,
+        help="Should browser be run headlessly",
+        action="count")
+    parser.add_argument(
+        "-bl",
+        "--block",
+        required=False,
+        help="Path to ad blocking extension",
+        action="store",
+        type=str)
     return parser.parse_args()
 
-def init_chrome_driver(is_headless):
+def init_chrome_driver(args):
     """ Initializes chrome driver"""
-    if is_headless:
-        options = Options()
+    options = Options()
+    if args.headless:
         options.add_argument("--headless")
-        return Chrome(chrome_options=options)
-    else:
-        return Chrome()
+    if args.block:
+        options.add_argument("--load-extension=" + args.block)
+    return Chrome(chrome_options=options)
 
 def open_output_file(path, columns):
     """ Opens or creates output file for writing """

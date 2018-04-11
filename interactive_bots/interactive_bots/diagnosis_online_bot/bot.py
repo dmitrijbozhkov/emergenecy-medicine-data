@@ -1,14 +1,34 @@
 """ Functions for bot """
 from functools import reduce
-from interactive_bots.commons.utils import init_chrome_driver, ExhaustOptions
+from interactive_bots.commons.utils import init_chrome_driver, ExhaustOptions, open_output_file
 from interactive_bots.commons.form_crawler import FormActionOptions, FormCrawler
-from selenium.common.exceptions import NoSuchElementException
+
+SITE_PATH = "http://www.diagnos-online.ru/symp.html"
 
 def run(args):
     """ Sets up and runs bot """
-    driver = init_chrome_driver(args.headless)
+    driver = init_chrome_driver(args)
     symptom_group_action = FormActionOptions(driver)
     symptom_action = FormActionOptions(driver)
+    diagnosis_action = FormActionOptions(driver)
+    symptom_group_action.set_actions(navigate_symptom_groups,
+        act_symptom_groups,
+        get_data_symptom_groups)
+    symptom_action.set_actions(navigate_symptoms,
+        act_symptom,
+        get_data_symptom)
+    diagnosis_action.set_actions(navigate_diagnosis,
+        act_diagnosis,
+        get_data_diagnosis)
+    crawler = FormCrawler()
+    crawler.add_action(symptom_group_action)
+    crawler.add_action(symptom_action)
+    crawler.add_action(diagnosis_action)
+    writer = open_output_file(args.path, ["symptom_group", "symptoms", "diagnosis"])
+    driver.get(SITE_PATH)
+    crawler.crawl(writer["writer"])
+    writer["file"].close()
+    driver.close()
 
 def navigate_symptom_groups(driver):
     """ Navigates through symptom body parts """
@@ -53,7 +73,6 @@ def act_symptom(driver, symptoms, acc):
     add_symptom = driver.find_element_by_css_selector("button[onclick='addfunc()']")
     remove_symptom = driver.find_element_by_css_selector("button[onclick='delfunc()']")
     clear_symptoms(driver, remove_symptom)
-    print(acc)
     try:
         if acc:
             options = next_symptom_combination(symptoms, acc[1], add_symptom)
@@ -84,4 +103,6 @@ def act_diagnosis(driver, submit, acc):
 
 def get_data_diagnosis(driver, acc):
     """ Get diagnoses from symptoms """
-    
+    diagnosis_field = driver.find_element_by_id("List11")
+    diagnoses = diagnosis_field.find_elements_by_css_selector("option")
+    return map(lambda d: {"diagnosis": d.text.strip()}, diagnoses)

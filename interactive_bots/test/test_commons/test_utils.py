@@ -41,6 +41,17 @@ class ParseArgsTestCase(TestCase):
             help="Which bot should be used",
             action="store",
             type=str)
+    
+    def test_set_ad_block_path_command(self):
+        """ --block command should be set """
+        parse_args(self.argparse_mock)
+        self.argparse_mock.add_argument.assert_any_call(
+            "-bl",
+            "--block",
+            required=False,
+            help="Path to ad blocking extension",
+            action="store",
+            type=str)
 
     def test_parse_args_should_be_called(self):
         """ After setting up commands arguments must be parsed """
@@ -49,29 +60,41 @@ class ParseArgsTestCase(TestCase):
 
 class InitChromeBrowserTestCase(TestCase):
     """ Test case for init_chrome_driver function """
-    @patch("interactive_bots.commons.utils.Chrome")
-    def test_init_chrome_driver_should_create_chrome_driver_if_is_headless_not_true(self, mock_driver):
-        """ Chrome driver should be created if is_headless is False """
-        init_chrome_driver(False)
-        self.assertTrue(mock_driver.called)
+    def setUp(self):
+        self.args_mock = Mock()
 
     @patch("interactive_bots.commons.utils.Chrome")
     @patch("interactive_bots.commons.utils.Options")
-    def test_init_chrome_driver_should_be_inicialized_with_options(self, parameter_list, mock_driver):
-        """ If True passed init_chrome_driver should add chrome_options """
+    def test_init_chrome_driver_should_create_chrome_driver_and_pass_options(self, parameter_list, mock_driver):
+        """ Chrome driver should be created and options object passed in it """
+        self.args_mock.block = None
+        self.args_mock.headless = 0
         options_mock = Mock()
         parameter_list.return_value = options_mock
-        init_chrome_driver(True)
+        init_chrome_driver(self.args_mock)
         mock_driver.assert_called_once_with(chrome_options=options_mock)
+
+    @patch("interactive_bots.commons.utils.Chrome")
+    @patch("interactive_bots.commons.utils.Options")
+    def test_init_chrome_driver_should_be_inicialized_with_path_to_extension_if_bl_passed(self, parameter_list, mock_driver):
+        """ If block was passed with -bl and path should add --load-extension argument with path """
+        self.args_mock.block = "lel"
+        self.args_mock.headless = 0
+        options_mock = Mock()
+        parameter_list.return_value = options_mock
+        init_chrome_driver(self.args_mock)
+        options_mock.add_argument.assert_called_once_with("--load-extension=" + self.args_mock.block)
 
     @patch("interactive_bots.commons.utils.Chrome")
     @patch("interactive_bots.commons.utils.Options")
     def test_init_chrome_driver_should_be_inicialized_with_headless_option(self, parameter_list, mock_driver):
         """ If True passed init_chrome_driver should add --headless option """
+        self.args_mock.headless = 1
+        self.args_mock.block = None
         options_mock = Mock()
         parameter_list.return_value = options_mock
-        init_chrome_driver(True)
-        options_mock.add_argument.assert_called_once_with("--headless")
+        init_chrome_driver(self.args_mock)
+        options_mock.add_argument.assert_any_call("--headless")
 
 class OpenOutputFileTestCase(TestCase):
     """ Test case for open_output_file function """

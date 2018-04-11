@@ -55,6 +55,7 @@ class FormCrawler():
         while pointer >= 0:
             try:
                 record = next(self.actions[pointer])
+                print(row)
                 if pointer == last_act:
                     for rows in record:
                         row.update(rows)
