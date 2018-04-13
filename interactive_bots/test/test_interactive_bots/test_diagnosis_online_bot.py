@@ -7,7 +7,7 @@ from interactive_bots.diagnosis_online_bot.bot import (navigate_symptom_groups,
     get_data_symptom_groups,
     navigate_symptoms,
     clear_symptoms,
-    next_symptom_combination,
+    next_symptom,
     act_symptom,
     get_data_symptom,
     navigate_diagnosis,
@@ -62,6 +62,12 @@ class SymptomGroupsTestCase(TestCase):
             (group_mock1, 1))
         self.assertTrue(symptom_act[0] is group_mock2)
         self.assertEqual(symptom_act[1], 2)
+
+    def test_act_symptom_groups_should_return_false_if_counter_more_than_group_amount(self):
+        """ act_symptom_groups should return False if acc[1] is more than
+        length of group elements passed """
+        result = act_symptom_groups(self.driver_mock, [], (Mock(), 1))
+        self.assertFalse(result)
 
     def test_get_data_symptom_groups_should_return_group_name(self):
         """ get_data_symptom_groups should call strip on text property of group and
@@ -118,57 +124,61 @@ class SymptomsTestCase(TestCase):
         symptom_mock.click.assert_called_once()
         remove_button.click.assert_called_once()
 
-    def test_next_symptom_combination_should_call_next_on_acc(self):
-        """ next_symptom_combination should call next on passed ExhaustOptions and pass list of symptoms in it """
-        exhaust_mock = Mock()
-        exhaust_mock.next.return_value = []
-        symptoms_mock = [Mock()]
-        button_mock = Mock()
-        next_symptom_combination(symptoms_mock, exhaust_mock, button_mock)
+    def test_next_symptom_should_call_pop_on_symptom_indexes(self):
+        """ next_symptom should get last element from symptom list and remove it """
+        symptom_mock = [Mock()]
+        add_mock = Mock()
+        symptom_index = Mock()
+        symptom_index.pop.return_value = 0
+        next_symptom(symptom_mock, symptom_index, add_mock)
+        symptom_index.pop.assert_called_once()
 
-    def test_next_symptom_combination_should_click_on_option_and_button(self):
-        """ next_symptom_combination should click on each symptom and add button """
-        exhaust_mock = Mock()
-        symptom1_mock = Mock()
-        symptom2_mock = Mock()
-        exhaust_mock.next.return_value = [symptom1_mock, symptom2_mock]
-        symptoms_mock = [symptom1_mock, symptom2_mock]
-        button_mock = Mock()
-        next_symptom_combination(symptoms_mock, exhaust_mock, button_mock)
-        symptom1_mock.click.assert_called_once()
-        symptom2_mock.click.assert_called_once()
-        button_mock.click.assert_called()
+    def test_next_symptom_should_call_click_on_symptom(self):
+        """ next_symptom should pop last symptom and click on it"""
+        symptom_mock = [Mock()]
+        add_mock = Mock()
+        symptom_index = Mock()
+        symptom_index.pop.return_value = 0
+        next_symptom(symptom_mock, symptom_index, add_mock)
+        add_mock.click.assert_called_once()
 
-    def test_next_symptom_combination_should_return_options(self):
-        """ next_symptom_combination should return list of symptoms from next combination """
-        exhaust_mock = Mock()
-        options_mock = []
-        exhaust_mock.next.return_value = options_mock
-        symptoms_mock = [Mock()]
-        button_mock = Mock()
-        options = next_symptom_combination(symptoms_mock, exhaust_mock, button_mock)
-        self.assertTrue(options is options_mock)
+    def test_next_symptom_should_click_on_adding_button_after_clicking_symptom(self):
+        """ next_symptom should click on button for adding symptoms after clicking on symptom element """
+        symptom_button = Mock()
+        symptom_mock = [symptom_button]
+        add_mock = Mock()
+        symptom_index = Mock()
+        symptom_index.pop.return_value = 0
+        add_mock.click.side_effect = lambda: symptom_button.click.assert_called_once()
+        next_symptom(symptom_mock, symptom_index, add_mock)
 
-    @patch("interactive_bots.diagnosis_online_bot.bot.ExhaustOptions")
-    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom_combination")
+    def test_next_symptom_should_return_popped_symptom(self):
+        """ next_symptom should return last symptom"""
+        symptom_button = Mock()
+        symptom_mock = [symptom_button]
+        add_mock = Mock()
+        symptom_index = Mock()
+        symptom_index.pop.return_value = 0
+        symptom = next_symptom(symptom_mock, symptom_index, add_mock)
+        self.assertEqual(symptom, symptom_button)
+
+    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom")
     @patch("interactive_bots.diagnosis_online_bot.bot.clear_symptoms")
-    def test_act_symptom_should_get_button_for_adding_symptoms(self, clear_symptoms_mock, next_symptom_mock, exhaust_mock):
+    def test_act_symptom_should_get_button_for_adding_symptoms(self, clear_symptoms_mock, next_symptom_mock):
         """ act_symptom should search for button by selector button[onclick='addfunc()'] """
         act_symptom(self.driver_mock, [Mock()], 0)
         self.driver_mock.find_element_by_css_selector.assert_any_call("button[onclick='addfunc()']")
 
-    @patch("interactive_bots.diagnosis_online_bot.bot.ExhaustOptions")
-    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom_combination")
+    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom")
     @patch("interactive_bots.diagnosis_online_bot.bot.clear_symptoms")
-    def test_act_symptom_should_get_button_for_removing_symptoms(self, clear_symptoms_mock, next_symptom_mock, exhaust_mock):
+    def test_act_symptom_should_get_button_for_removing_symptoms(self, clear_symptoms_mock, next_symptom_mock):
         """ act_symptom should search for button by selector button[onclick='delfunc()'] """
         act_symptom(self.driver_mock, [Mock()], 0)
         self.driver_mock.find_element_by_css_selector.assert_any_call("button[onclick='delfunc()']")
 
-    @patch("interactive_bots.diagnosis_online_bot.bot.ExhaustOptions")
-    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom_combination")
+    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom")
     @patch("interactive_bots.diagnosis_online_bot.bot.clear_symptoms")
-    def test_act_symptom_should_clear_symptoms(self, clear_symptoms_mock, next_symptom_mock, exhaust_mock):
+    def test_act_symptom_should_clear_symptoms(self, clear_symptoms_mock, next_symptom_mock):
         """ act_symptom should call clear_symptoms with driver and button for removing symptom """
         remove_mock = Mock()
         self.driver_mock.find_element_by_css_selector.side_effect = \
@@ -176,82 +186,75 @@ class SymptomsTestCase(TestCase):
         act_symptom(self.driver_mock, [Mock()], 0)
         clear_symptoms_mock.assert_called_once_with(self.driver_mock, remove_mock)
 
-    @patch("interactive_bots.diagnosis_online_bot.bot.ExhaustOptions")
-    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom_combination")
+    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom")
     @patch("interactive_bots.diagnosis_online_bot.bot.clear_symptoms")
-    def test_act_symptom_should_call_next_symptom_combination_and_create_exhaust_options_if_acc_False(self, clear_symptoms_mock, next_symptom_mock, exhaust_mock):
-        """ act_symptom should call next_symptom_combination
-        with symptoms, ExhaustOptions and add symptom button if acc is False value """
+    def test_act_symptom_should_call_next_symptom_and_pass_symptoms_list_with_button_if_acc_False(self, clear_symptoms_mock, next_symptom_mock):
+        """ act_symptom should call next_symptom
+        with symptoms and add symptom button if acc is False value """
         symptoms_mock = [Mock()]
         add_mock = Mock()
-        combinations_mock = Mock()
         self.driver_mock.find_element_by_css_selector.side_effect = \
             lambda q: add_mock if q == "button[onclick='addfunc()']" else Mock()
-        exhaust_mock.return_value = combinations_mock
         act_symptom(self.driver_mock, symptoms_mock, 0)
-        exhaust_mock.assert_called_once_with(1)
-        next_symptom_mock.assert_called_once_with(symptoms_mock, combinations_mock, add_mock)
+        next_symptom_mock.assert_called_once_with(symptoms_mock, [0], add_mock)
 
-    @patch("interactive_bots.diagnosis_online_bot.bot.ExhaustOptions")
-    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom_combination")
+    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom")
     @patch("interactive_bots.diagnosis_online_bot.bot.clear_symptoms")
-    def test_act_symptom_should_return_tuple_of_symptoms_and_exhaust_options_if_acc_False(self, clear_symptoms_mock, next_symptom_mock, exhaust_mock):
-        """ act_symptom should return Tuple with values returned from next_symptom_combination and ExhaustOptions """
-        combinations_mock = Mock()
+    def test_act_symptom_should_return_tuple_of_symptoms_and_symptoms_if_acc_False(self, clear_symptoms_mock, next_symptom_mock):
+        """ act_symptom should return Tuple with symptoms list and
+        value returned from next_symptom  """
+        symptoms_mock = [Mock()]
         options_mock = Mock()
         next_symptom_mock.return_value = options_mock
-        exhaust_mock.return_value = combinations_mock
-        result = act_symptom(self.driver_mock, [Mock()], 0)
-        self.assertTrue(result[0] is options_mock)
-        self.assertTrue(result[1] is combinations_mock)
+        result = act_symptom(self.driver_mock, symptoms_mock, 0)
+        self.assertTrue(result[1] is options_mock)
+        self.assertEqual(result[0], [0])
 
-    @patch("interactive_bots.diagnosis_online_bot.bot.ExhaustOptions")
-    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom_combination")
+    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom")
     @patch("interactive_bots.diagnosis_online_bot.bot.clear_symptoms")
-    def test_act_symptom_should_call_next_symptom_combination_if_acc_True(self, clear_symptoms_mock, next_symptom_mock, exhaust_mock):
-        """ act_symptom should call next_symptom_combination with list of
-        symptoms, ExhaustOptions object from acc and add button if acc is True value """
+    def test_act_symptom_should_call_next_symptom_with_left_symptoms_and_add_button_if_acc_True(self, clear_symptoms_mock, next_symptom_mock):
+        """ act_symptom should call next_symptom with list of
+        symptoms that are left from acc and add button if acc is True value """
         add_mock = Mock()
-        acc_mock = ([Mock()], Mock())
+        acc_mock = ([0], Mock())
         symptoms_mock = [Mock()]
         self.driver_mock.find_element_by_css_selector.side_effect = \
             lambda q: add_mock if q == "button[onclick='addfunc()']" else Mock()
         act_symptom(self.driver_mock, symptoms_mock, acc_mock)
-        next_symptom_mock.assert_called_once_with(symptoms_mock, acc_mock[1], add_mock)
+        next_symptom_mock.assert_called_once_with(symptoms_mock, acc_mock[0], add_mock)
 
-    @patch("interactive_bots.diagnosis_online_bot.bot.ExhaustOptions")
-    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom_combination")
+    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom")
     @patch("interactive_bots.diagnosis_online_bot.bot.clear_symptoms")
-    def test_act_symptom_should_return_tuple_of_symptoms_and_exhaust_options_if_acc_True_value(self, clear_symptoms_mock, next_symptom_mock, exhaust_mock):
-        """ act_symptom should returntuple of symptoms from next_symptom_combination and ExhaustOptions if acc is True """
-        combinations_mock = Mock()
-        acc_mock = ([Mock()], combinations_mock)
+    def test_act_symptom_should_return_tuple_of_symptoms_and_symptom_if_acc_True_value(self, clear_symptoms_mock, next_symptom_mock):
+        """ act_symptom should return Tuple of left symptoms
+        and symptom from next_symptom if acc is True """
+        add_mock = Mock()
+        acc_mock = ([Mock()], Mock())
         symptoms_mock = [Mock()]
-        options_mock = Mock()
-        next_symptom_mock.return_value = options_mock
+        result_symptom_mock = Mock()
+        next_symptom_mock.return_value = result_symptom_mock
+        self.driver_mock.find_element_by_css_selector.side_effect = \
+            lambda q: add_mock if q == "button[onclick='addfunc()']" else Mock()
         result = act_symptom(self.driver_mock, symptoms_mock, acc_mock)
-        self.assertTrue(result[0] is options_mock)
-        self.assertTrue(result[1] is combinations_mock)
+        self.assertTrue(result[0] is acc_mock[0])
+        self.assertTrue(result[1] is result_symptom_mock)
 
-    @patch("interactive_bots.diagnosis_online_bot.bot.ExhaustOptions")
-    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom_combination")
+    @patch("interactive_bots.diagnosis_online_bot.bot.next_symptom")
     @patch("interactive_bots.diagnosis_online_bot.bot.clear_symptoms")
-    def test_act_symptom_should_return_False_if_next_symptom_combination_raises_exception(self, clear_symptoms_mock, next_symptom_mock, exhaust_mock):
-        """ act_symptom should return false if next_symptom_combination raises StopIteration exception """
-        next_symptom_mock.side_effect = StopIteration()
+    def test_act_symptom_should_return_False_if_next_symptom_combination_raises_exception(self, clear_symptoms_mock, next_symptom_mock):
+        """ act_symptom should return false if next_symptom raises IndexError exception """
+        next_symptom_mock.side_effect = IndexError()
         result = act_symptom(self.driver_mock, [Mock()], 0)
         self.assertFalse(result)
 
-    def test_get_data_symptom_should_return_dict_with_all_symptoms_as_string(self):
-        """ get_data_symptom should return dictionary with 'symptoms' field with string of symptoms separated by ; """
-        symptom1_mock = Mock()
-        symptom2_mock = Mock()
-        symptom1_text = "Зуд"
-        symptom2_text = "Кашель"
-        symptom1_mock.text.strip.return_value = symptom1_text
-        symptom2_mock.text.strip.return_value = symptom2_text
-        result = get_data_symptom(self.driver_mock, ([symptom1_mock, symptom2_mock], Mock()))
-        self.assertEqual(result["symptoms"], symptom1_text + ";" + symptom2_text + ";")
+    def test_get_data_symptom_should_return_dict_with_symptom_as_string(self):
+        """ get_data_symptom should return dictionary with 'symptom' field
+        with stripped text from elemt """
+        symptom_mock = Mock()
+        symptom_text = "Зуд"
+        symptom_mock.text.strip.return_value = symptom_text
+        result = get_data_symptom(self.driver_mock, ([], symptom_mock))
+        self.assertEqual(result["symptom"], symptom_text)
 
 class DiagnosisTestCase(TestCase):
     """ Test case for navigate, action and data functions for getting diagnosis """

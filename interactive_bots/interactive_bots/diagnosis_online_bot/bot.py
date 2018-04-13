@@ -24,7 +24,7 @@ def run(args):
     crawler.add_action(symptom_group_action)
     crawler.add_action(symptom_action)
     crawler.add_action(diagnosis_action)
-    writer = open_output_file(args.path, ["symptom_group", "symptoms", "diagnosis"])
+    writer = open_output_file(args.path, ["symptom_group", "symptom", "diagnosis"])
     driver.get(SITE_PATH)
     crawler.crawl(writer["writer"])
     writer["file"].close()
@@ -40,6 +40,8 @@ def act_symptom_groups(driver, groups, acc):
     if acc == 0:
         groups[0].click()
         return (groups[0], 1)
+    if acc[1] > len(groups):
+        return False
     else:
         groups[acc[1]].click()
         return (groups[acc[1]], acc[1] + 1)
@@ -60,13 +62,12 @@ def clear_symptoms(driver, button):
         symptom.click()
         button.click()
 
-def next_symptom_combination(symptoms, acc, add_symptom):
-    """ Selects next sympom combination """
-    options = acc.next(symptoms)
-    for option in options:
-        option.click()
-        add_symptom.click()
-    return options
+def next_symptom(symptoms, indexes, add_symptom):
+    """ returns  """
+    index = indexes.pop()
+    symptoms[index].click()
+    add_symptom.click()
+    return symptoms[index]
 
 def act_symptom(driver, symptoms, acc):
     """ Selects or disselects symptoms """
@@ -75,19 +76,18 @@ def act_symptom(driver, symptoms, acc):
     clear_symptoms(driver, remove_symptom)
     try:
         if acc:
-            options = next_symptom_combination(symptoms, acc[1], add_symptom)
-            return (options, acc[1])
+            symptom = next_symptom(symptoms, acc[0], add_symptom)
+            return (acc[0], symptom)
         else:
-            acc = ExhaustOptions(len(symptoms))
-            options = next_symptom_combination(symptoms, acc, add_symptom)
-            return (options, acc)
-    except StopIteration:
+            symptom_indexes = [x for x in range(len(symptoms))]
+            symptom = next_symptom(symptoms, symptom_indexes, add_symptom)
+            return (symptom_indexes, symptom)
+    except IndexError:
         return False
 
 def get_data_symptom(driver, options):
-    """ Gets names of symptoms """
-    symptoms = reduce(lambda acc, sym: acc + sym.text.strip() + ";", options[0], "")
-    return {"symptoms": symptoms}
+    """ Returns record with selected symptom """
+    return {"symptom": options[1].text.strip()}
 
 def navigate_diagnosis(driver):
     """ Searches for submit button """

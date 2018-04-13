@@ -44,6 +44,14 @@ def init_chrome_driver(args):
         options.add_argument("--load-extension=" + args.block)
     return Chrome(chrome_options=options)
 
+def next_item_combination(items, acc, add_symptom):
+    """ Selects next item combination """
+    options = acc.next(items)
+    for option in options:
+        option.click()
+        add_symptom.click()
+    return options
+
 def open_output_file(path, columns):
     """ Opens or creates output file for writing """
     file = open(path, "w+")
