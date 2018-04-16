@@ -16,8 +16,10 @@ CREATE TABLE diagnosis (
 CREATE TABLE symptom_diagnosis (
     symptom_name TEXT,
     diagnosis_name TEXT,
+    symptom_group_name TEXT,
     probability REAL NOT NULL,
-    PRIMARY KEY (symptom_name, diagnosis_name),
+    PRIMARY KEY (symptom_name, diagnosis_name, symptom_group_name),
     FOREIGN KEY (symptom_name) REFERENCES symptom (name) ON DELETE CASCADE ON UPDATE NO ACTION,
-    FOREIGN KEY (diagnosis_name) REFERENCES diagnosis (name) ON DELETE CASCADE ON UPDATE NO ACTION
+    FOREIGN KEY (diagnosis_name) REFERENCES diagnosis (name) ON DELETE CASCADE ON UPDATE NO ACTION,
+    FOREIGN KEY (symptom_group_name) REFERENCES symptom_group (name) ON DELETE CASCADE ON UPDATE NO ACTION
 )

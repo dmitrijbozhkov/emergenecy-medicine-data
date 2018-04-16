@@ -10,7 +10,14 @@ def parse_args(parser):
         "-p",
         "--path",
         required=True,
-        help="Path to output files",
+        help="Path to database",
+        action="store",
+        type=str)
+    parser.add_argument(
+        "-s",
+        "--scema",
+        required=True,
+        help="Path to database scema script",
         action="store",
         type=str)
     parser.add_argument(

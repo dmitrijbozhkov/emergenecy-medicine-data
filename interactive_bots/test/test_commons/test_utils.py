@@ -21,6 +21,17 @@ class ParseArgsTestCase(TestCase):
             action="store",
             type=str)
 
+    def test_set_scema_command(self):
+        """ --path command should be set """
+        parse_args(self.argparse_mock)
+        self.argparse_mock.add_argument.assert_any_call(
+            "-s",
+            "--scema",
+            required=True,
+            help="Path to database scema script",
+            action="store",
+            type=str)
+
     def test_set_headless_command(self):
         """ --headless command should be set """
         parse_args(self.argparse_mock)
