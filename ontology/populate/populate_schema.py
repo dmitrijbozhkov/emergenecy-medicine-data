@@ -50,6 +50,7 @@ def properties_populate(onto):
         class taken(onto.SubstanceIntake >> onto.Substance): pass
         class prescribe(onto.Disease >> onto.Substance): pass
         class occurs_in(onto.Trauma >> onto.Circumstance): pass
+        class contains(onto.BodyPart >> onto.BodyPart): pass
     return onto
 
 def class_disjointness(onto):
