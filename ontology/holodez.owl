@@ -1,0 +1,557 @@
+<?xml version="1.0"?>
+<rdf:RDF xml:base="http://holodez/diagnostics.owl"
+         xmlns="http://holodez/diagnostics.owl#"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#">
+
+<owl:Ontology rdf:about="http://holodez/diagnostics.owl"/>
+
+<owl:Prefix name="dec" IRI="http://holodez/diagnostics.owl/declarations#"/>
+<owl:Prefix name="ind" IRI="http://holodez/diagnostics.owl/individuals#"/>
+
+<owl:Class rdf:about="dec:PrimaryEntity">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Factor">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Element">
+  <rdfs:subClassOf rdf:resource="dec:PrimaryEntity"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Food">
+  <rdfs:subClassOf rdf:resource="dec:PrimaryEntity"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:FoodElement">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Action">
+  <rdfs:subClassOf rdf:resource="dec:PrimaryEntity"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:TestAnalysis">
+  <rdfs:subClassOf rdf:resource="dec:Action"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Treatment">
+  <rdfs:subClassOf rdf:resource="dec:Action"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:ConfirmedTestSyndromes">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:ConfirmedTestDiseases">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:SideEffect">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:DiseaseProbability">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Disease">
+  <rdfs:subClassOf rdf:resource="dec:PrimaryEntity"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Syndrome">
+  <rdfs:subClassOf rdf:resource="dec:PrimaryEntity"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Precedent">
+  <rdfs:subClassOf rdf:resource="dec:PrimaryEntity"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:PrecedentSyndrome">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:DiseaseManifestation">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Place">
+  <rdfs:subClassOf rdf:resource="dec:PrimaryEntity"/>
+</owl:Class>
+
+<owl:DatatypeProperty rdf:about="dec:has_name">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:PrimaryEntity"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_ratio">
+  <rdfs:domain rdf:resource="dec:Factor"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_description">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:PrimaryEntity"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_treatment">
+  <rdfs:domain rdf:resource="dec:PrimaryEntity"/>
+  <rdfs:range rdf:resource="dec:Treatment"/>
+  <rdfs:domain rdf:resource="dec:Allergy"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_element">
+  <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:range rdf:resource="dec:Element"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_eliminated_disease">
+  <rdfs:domain rdf:resource="dec:TestAnalysis"/>
+  <rdfs:range rdf:resource="dec:Disease"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_eliminated_syndrome">
+  <rdfs:domain rdf:resource="dec:TestAnalysis"/>
+  <rdfs:range rdf:resource="dec:Syndrome"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_confirmed_syndrome">
+  <rdfs:domain rdf:resource="dec:TestAnalysis"/>
+  <rdfs:range rdf:resource="dec:ConfirmedTestSyndromes"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_confirmed_disease">
+  <rdfs:domain rdf:resource="dec:TestAnalysis"/>
+  <rdfs:range rdf:resource="dec:ConfirmedTestDiseases"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_disease">
+  <rdfs:domain rdf:resource="dec:Factor"/>
+  <rdfs:range rdf:resource="dec:Disease"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_probability">
+  <rdfs:domain rdf:resource="dec:Factor"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+</owl:DatatypeProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_syndrome">
+  <rdfs:domain rdf:resource="dec:Factor"/>
+  <rdfs:range rdf:resource="dec:Syndrome"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_precedent">
+  <rdfs:domain rdf:resource="dec:Factor"/>
+  <rdfs:range rdf:resource="dec:Precedent"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_side_effect">
+  <rdfs:domain rdf:resource="dec:Treatment"/>
+  <rdfs:range rdf:resource="dec:SideEffect"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:restrict_use_element">
+  <rdfs:domain rdf:resource="dec:PrimaryEntity"/>
+  <rdfs:range rdf:resource="dec:Element"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_disease_probability">
+  <rdfs:domain rdf:resource="dec:PrimaryEntity"/>
+  <rdfs:range rdf:resource="dec:DiseaseProbability"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_type">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:PrimaryEntity"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_question">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Precedent"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_syndrome_probability">
+  <rdfs:domain rdf:resource="dec:PrimaryEntity"/>
+  <rdfs:range rdf:resource="dec:Factor"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_status">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+</owl:DatatypeProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_manifestation">
+  <rdfs:domain rdf:resource="dec:PrimaryEntity"/>
+  <rdfs:range rdf:resource="dec:Factor"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_stage">
+  <rdfs:domain rdf:resource="dec:Factor"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_region">
+  <rdfs:domain rdf:resource="dec:Country"/>
+  <rdfs:range rdf:resource="dec:Region"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_city">
+  <rdfs:domain rdf:resource="dec:Region"/>
+  <rdfs:range rdf:resource="dec:City"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_end">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_begin">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+</owl:DatatypeProperty>
+
+<owl:Class rdf:about="dec:Country">
+  <rdfs:subClassOf rdf:resource="dec:Place"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Region">
+  <rdfs:subClassOf rdf:resource="dec:Place"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:City">
+  <rdfs:subClassOf rdf:resource="dec:Place"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Case">
+  <rdfs:subClassOf rdf:resource="dec:PrimaryEntity"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:CaseDiagnosis">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:CaseDiaryEntry">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Patient">
+  <rdfs:subClassOf rdf:resource="dec:PrimaryEntity"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Passport">
+  <rdfs:subClassOf rdf:resource="dec:PrimaryEntity"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:MedicalWorker">
+  <rdfs:subClassOf rdf:resource="dec:Patient"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Doctor">
+  <rdfs:subClassOf rdf:resource="dec:MedicalWorker"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:PatientAnamnesis">
+  <rdfs:subClassOf rdf:resource="dec:PrimaryEntity"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Occupation">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Pregnancy">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:PregnancyDiaryEntry">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Visit">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Menstruation">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:MenstruationManifestation">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Sequela">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Relative">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:RationElement">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Residence">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Allergy">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:AllergyManifestation">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Operation">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:Personel">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:Class rdf:about="dec:OperationDiaryEntry">
+  <rdfs:subClassOf rdf:resource="dec:Factor"/>
+</owl:Class>
+
+<owl:ObjectProperty rdf:about="dec:has_diagnosis">
+  <rdfs:domain rdf:resource="dec:Case"/>
+  <rdfs:range rdf:resource="dec:CaseDiagnosis"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_case_diary_entry">
+  <rdfs:domain rdf:resource="dec:Case"/>
+  <rdfs:range rdf:resource="dec:CaseDiaryEntry"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_action">
+  <rdfs:domain rdf:resource="dec:CaseDiaryEntry"/>
+  <rdfs:range rdf:resource="dec:Action"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_possible_diagnosis">
+  <rdfs:domain rdf:resource="dec:Case"/>
+  <rdfs:range rdf:resource="dec:DiseaseProbability"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_passport">
+  <rdfs:domain rdf:resource="dec:Patient"/>
+  <rdfs:range rdf:resource="dec:Passport"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_surname">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Passport"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_patronymic">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Passport"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_sex">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Passport"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_bithday">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Passport"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#date"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_photo">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Passport"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:ObjectProperty rdf:about="dec:allergy_manifested_by">
+  <rdfs:domain rdf:resource="dec:Allergy"/>
+  <rdfs:range rdf:resource="dec:AllergyManifestation"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_duration">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:AllergyManifestation"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+</owl:DatatypeProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_operation">
+  <rdfs:domain rdf:resource="dec:PatientAnamnesis"/>
+  <rdfs:range rdf:resource="dec:Operation"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_operation_diary_entry">
+  <rdfs:domain rdf:resource="dec:Operation"/>
+  <rdfs:range rdf:resource="dec:OperationDiaryEntry"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:action_taken">
+  <rdfs:domain rdf:resource="dec:Operation"/>
+  <rdfs:range rdf:resource="dec:OperationDiaryEntry"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_personel">
+  <rdfs:domain rdf:resource="dec:Operation"/>
+  <rdfs:range rdf:resource="dec:Personel"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:participated_as">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Personel"/>
+  <rdfs:range rdf:resource="dec:MedicalWorker"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_biography">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Passport"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_case">
+  <rdfs:domain rdf:resource="dec:Doctor"/>
+  <rdfs:range rdf:resource="dec:Case"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_occupation">
+  <rdfs:domain rdf:resource="dec:PatientAnamnesis"/>
+  <rdfs:range rdf:resource="dec:Occupation"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_anamnesis">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Patient"/>
+  <rdfs:range rdf:resource="dec:PatientAnamnesis"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="dec:works_in">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Occupation"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_pregnancy">
+  <rdfs:domain rdf:resource="dec:PatientAnamnesis"/>
+  <rdfs:range rdf:resource="dec:Pregnancy"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_pregnancy_diary_entry">
+  <rdfs:domain rdf:resource="dec:Pregnancy"/>
+  <rdfs:range rdf:resource="dec:PregnancyDiaryEntry"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_visit">
+  <rdfs:domain rdf:resource="dec:PatientAnamnesis"/>
+  <rdfs:range rdf:resource="dec:Visit"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_place">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Visit"/>
+  <rdfs:range rdf:resource="dec:Place"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_menstruation">
+  <rdfs:domain rdf:resource="dec:PatientAnamnesis"/>
+  <rdfs:range rdf:resource="dec:Menstruation"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:treated_with">
+  <rdfs:domain rdf:resource="dec:Menstruation"/>
+  <rdfs:range rdf:resource="dec:Treatment"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:menstruation_manifested_by">
+  <rdfs:domain rdf:resource="dec:Menstruation"/>
+  <rdfs:range rdf:resource="dec:MenstruationManifestation"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:had_disease">
+  <rdfs:domain rdf:resource="dec:PatientAnamnesis"/>
+  <rdfs:range rdf:resource="dec:Disease"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_sequela">
+  <rdfs:domain rdf:resource="dec:PatientAnamnesis"/>
+  <rdfs:range rdf:resource="dec:Sequela"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_commentary">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Sequela"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_date">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Factor"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#date"/>
+</owl:DatatypeProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_relative">
+  <rdfs:domain rdf:resource="dec:PatientAnamnesis"/>
+  <rdfs:range rdf:resource="dec:Relative"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:relative_with">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Relative"/>
+  <rdfs:range rdf:resource="dec:Patient"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:opened_case">
+  <rdfs:domain rdf:resource="dec:PatientAnamnesis"/>
+  <rdfs:range rdf:resource="dec:Case"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_ration_element">
+  <rdfs:domain rdf:resource="dec:PatientAnamnesis"/>
+  <rdfs:range rdf:resource="dec:RationElement"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_residence">
+  <rdfs:domain rdf:resource="dec:PatientAnamnesis"/>
+  <rdfs:range rdf:resource="dec:Residence"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_residence_country">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Residence"/>
+  <rdfs:range rdf:resource="dec:Country"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_residence_region">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Residence"/>
+  <rdfs:range rdf:resource="dec:Region"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="dec:has_residence_city">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Residence"/>
+  <rdfs:range rdf:resource="dec:City"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="dec:has_residence_street">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="dec:Residence"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:ObjectProperty rdf:about="dec:triggered_by">
+  <rdfs:domain rdf:resource="dec:Allergy"/>
+  <rdfs:range rdf:resource="dec:Element"/>
+  <rdfs:range rdf:resource="dec:Precedent"/>
+</owl:ObjectProperty>
+
+
+</rdf:RDF>
